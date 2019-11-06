@@ -45,9 +45,12 @@ class User_input:
 		if param == "taxonomy":
 			if re.match(".*[0-9]+.*",inp):
 				if re.match("txid[0-9]+",inp):
+					print("sadly esearch does not work with txid## format taxon IDs. Try again with only the numbers instead!")
+					return True
+				elif re.match("[0-9]+",inp):
 					return False
 				else:
-					print("It seems like you were attempting to write a taxon ID. the proper format is 'txid' followed by any amount of numbers with no spaces.")
+					print("Taxon inputs can either be all numbers or all letters.")
 					return True
 			if not re.match("^[a-z]*$",inp):
 				print("No whitespaces are allowed in your search query.")

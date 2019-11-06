@@ -7,7 +7,7 @@ class Retrieve():
 	def __init__(self):
 		self.fasta = None
 
-
+	
 	def taxa_protein_dict(self,f,typ="proteins"):
 		#returns list of all taxa from fasta files
 		t_p_dict = {}
@@ -29,7 +29,10 @@ class Retrieve():
 	
 
 	def get_taxa(self, taxon, db="Taxonomy"):
-		tax = subprocess.check_output("esearch -db {} -query '{}' | efetch -format txt".format(db,taxon,db),shell=True)		
+		if re.match("[0-9]+",taxon):
+			taxon = taxon+"[UID]"
+			print(taxon)
+		tax = subprocess.check_output("esearch -db {} -query {} | efetch -format txt".format(db,taxon),shell=True)		
 		tax = tax.decode("utf-8").replace("    ",": ").replace("\n","")
 		tax = re.split(r"\d\. ",tax)
 		tax = list(filter(None,tax))
@@ -37,6 +40,8 @@ class Retrieve():
 
 
 	def summary(self, protein,taxon,db="Protein"):
+		if re.match("[0-9]+",taxon):
+			taxon = "txid"+taxon
 		outp = subprocess.check_output("esearch -db {} -query '{}[organism] AND {}[Protein] NOT PARTIAL NOT PREDICTED'".format(db,taxon,protein),shell=True)
 		outp = outp.decode("utf-8")
 		return re.findall(r"<Count>.*</Count>",outp)[0].replace("<Count>","").replace("</Count>","")
@@ -44,6 +49,8 @@ class Retrieve():
 
 	def retrieve(self,protein,taxon,db="Protein",form="fasta"):
 		#returns fasta file given search parameters
+		if re.match("[0-9]+",taxon):
+			taxon = "txid"+taxon
 		outp = subprocess.check_output("esearch -db {} -query '{}[organism] AND {}[Protein] NOT PARTIAL NOT PREDICTED' | efetch -db {} -format {}".format(db,taxon,protein,db,form),shell=True)
 		self.fasta = outp.decode("utf-8")
 		return outp.decode("utf-8")
