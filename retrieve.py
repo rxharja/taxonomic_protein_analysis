@@ -27,7 +27,15 @@ class Retrieve():
 			build_dict(proteins)
 		return t_p_dict
 	
-	
+
+	def get_taxa(self, taxon, db="Taxonomy"):
+		tax = subprocess.check_output("esearch -db {} -query '{}' | efetch -format txt".format(db,taxon,db),shell=True)		
+		tax = tax.decode("utf-8").replace("    ",": ").replace("\n","")
+		tax = re.split(r"\d\. ",tax)
+		tax = list(filter(None,tax))
+		return tax
+
+
 	def summary(self, protein,taxon,db="Protein"):
 		outp = subprocess.check_output("esearch -db {} -query '{}[organism] AND {}[Protein] NOT PARTIAL NOT PREDICTED'".format(db,taxon,protein),shell=True)
 		outp = outp.decode("utf-8")

@@ -27,38 +27,40 @@ class App:
 	def taxon_query(self):
 		return self.Taxonomy.val
 
+
 	@taxon_query.setter
-	def taxon_query(self,inp,direct=False):
-		if direct:
-			self.Taxonomy = User_input.from_param(inp)
+	def taxon_query(self,inp):
+		if inp != "taxonomy":
+			self.Taxonomy = User_input.from_param(inp,"taxonomy")
 		else:
-			self.Taxonomy = User_input.from_input(inp)
+			self.Taxonomy = User_input.from_input("taxonomy")
  
 
 	@property
 	def protein_query(self):
 		return self.Protein.val
 
+
 	@protein_query.setter
-	def protein_query(self,inp,direct=False):
-		if direct:
-			self.Protein = User_input.from_param(inp)
-		else:
-			self.protein = User_input.from_input(inp)
+	def protein_query(self,inp):
+		self.Protein = User_input.from_input("protein")
 	
+
 	def get_taxa(self):
-		#given self.taxon_query, return list of 
+		#given self.taxon_query, return list of
+		return self.ncbi_api.get_taxa(self.taxon_query)
+ 
+
 	def taxa(self,typ):
 	#	gets list of all taxa produced from search
 		self.dataset = self.ncbi_api.taxa_protein_dict(self.search(),typ)
 	
 
 	def get_summary(self):
-		#TODO: build fxn returning a summary of search results for speed
 		self.summary = self.ncbi_api.summary(self.protein_query,self.taxon_query)
 
 
 	def get_fasta(self):
 		#initiates ncbi search using esearch and efetch
 		self.fasta = self.ncbi_api.retrieve(self.protein_query,self.taxon_query)
-		return self.fasta	
+		return self.fasta
