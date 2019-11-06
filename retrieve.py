@@ -1,8 +1,13 @@
 #!usr/bin/env python3
 import subprocess,re
+#retrieve class uses subprocess to call esearch and efetch to generate a fasta file given a protein and taxon.
+#The fasta file is processed into a dictionary of accessions/protein sequences per species
 
 class Retrieve():
-	
+	def __init__(self):
+		self.fasta = None
+
+
 	def taxa_protein_dict(self,f,typ="proteins"):
 		#returns list of all taxa from fasta files
 		t_p_dict = {}
@@ -21,10 +26,17 @@ class Retrieve():
 			proteins = list(filter(None,proteins))
 			build_dict(proteins)
 		return t_p_dict
+	
+	
+	def summary(self, protein,taxon,db="Protein"):
+		outp = subprocess.check_output("esearch -db {} -query '{}[organism] AND {}[Protein] NOT PARTIAL NOT PREDICTED'".format(db,taxon,protein),shell=True)
+		outp = outp.decode("utf-8")
+		return re.findall(r"<Count>.*</Count>",outp)[0].replace("<Count>","").replace("</Count>","")
 
 
 	def retrieve(self,protein,taxon,db="Protein",form="fasta"):
 		#returns fasta file given search parameters
 		outp = subprocess.check_output("esearch -db {} -query '{}[organism] AND {}[Protein] NOT PARTIAL NOT PREDICTED' | efetch -db {} -format {}".format(db,taxon,protein,db,form),shell=True)
+		self.fasta = outp.decode("utf-8")
 		return outp.decode("utf-8")
 

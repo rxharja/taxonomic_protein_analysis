@@ -6,6 +6,12 @@ class User_input:
 		self.user_input = user_input
 		self.param = param
 
+
+	@classmethod
+	def from_param(cls,itm,param):
+		return cls(itm,param)
+
+
 	@classmethod
 	def from_input(cls, param):
 		if param == "taxonomy":
@@ -34,6 +40,8 @@ class User_input:
 	
 	@staticmethod
 	def check_input(param,inp):
+		if inp == "exit":
+			exit()
 		if param == "taxonomy":
 			if re.match(".*[0-9]+.*",inp):
 				if re.match("txid[0-9]+",inp):
@@ -50,4 +58,4 @@ class User_input:
 				return False
 			else:
 				print("Invalid protein name, make sure there are no spaces.")
-				return True
+				return False
