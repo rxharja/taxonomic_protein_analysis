@@ -45,8 +45,10 @@ class User_input:
 		if param == "taxonomy":
 			if re.match(".*[0-9]+.*",inp):
 				if re.match("txid[0-9]+",inp):
-					print("sadly esearch does not work with txid## format taxon IDs. Try again with only the numbers instead!")
+					print("sadly esearch is finicky with the txid## format for taxon IDs. Try again with only the numbers instead!")
 					return True
+				elif re.match("[0-9]+\[uid\]",inp.lower()):
+					print("don't worry about suffixing the taxon ID with [UID], the program will handle that for you, try again with only numbers instead!")
 				elif re.match("[0-9]+",inp):
 					return False
 				else:

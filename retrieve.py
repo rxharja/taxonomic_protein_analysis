@@ -31,7 +31,6 @@ class Retrieve():
 	def get_taxa(self, taxon, db="Taxonomy"):
 		if re.match("[0-9]+",taxon):
 			taxon = taxon+"[UID]"
-			print(taxon)
 		tax = subprocess.check_output("esearch -db {} -query {} | efetch -format txt".format(db,taxon),shell=True)		
 		tax = tax.decode("utf-8").replace("    ",": ").replace("\n","")
 		tax = re.split(r"\d\. ",tax)
