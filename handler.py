@@ -25,9 +25,8 @@ def input_handler(obj):
 	elif user_change == "2":
 		obj.protein_query = "protein"
 	elif user_change == "3":
-		#obj.taxon_query = "taxonomy"
-		#obj.protein_query = "protein"
-		obj.from_class()
+		obj.taxon_query = "taxonomy"
+		obj.protein_query = "protein"
 	elif user_change not in "123" and user_change != "":
 		print("Proper inputs would be:\n 1 for taxon, 2 for protein, 3 for both, 'enter' to move on, or 'exit' to exit the program.")
 	if user_change == "":
