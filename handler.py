@@ -6,8 +6,11 @@ def handler(obj):
 	input_logic(obj)
 	obj.get_summary()
 	if proceed(obj.summary):
-		app.taxa()	
-		print(app.dataset)
+		obj.taxa()
+		print("Species: ",obj.total_species(),"Accessions: ",obj.total_seqs())
+		print("writing fasta")
+		obj.write(obj.fasta)
+		obj.plot()
 	else:
 		return handler(obj) 
 		
@@ -61,6 +64,9 @@ def taxon_handler(obj):
 
 
 def proceed(results):
+	if int(results) <= 1:
+		print("Sorry, your search produced {} results. That's not enough to continue. Please change a criteria to continue".format(results))
+		return False
 	ans = ex_check(input("your search produced {} results. Proceed?(y/n): ".format(results)))
 	if ans == "y":
 		return True

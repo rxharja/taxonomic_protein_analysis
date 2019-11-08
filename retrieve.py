@@ -45,7 +45,6 @@ class Retrieve():
 		#returns fasta file given search parameters
 		outp = self.run(self.search_str(taxon,"txid",db,protein) + self.fetch_str(db,form))
 		self.fasta = outp.decode("utf-8")
-		print(outp.decode("utf-8"))
 		return outp.decode("utf-8")
 
 
@@ -73,7 +72,7 @@ class Retrieve():
 			proteins = list(filter(None,proteins))
 			for i in range(len(species)):
 				try:
-					t_p_dict[species[i]][accessions[i]] += [proteins[i]]
+					t_p_dict[species[i]] = {**t_p_dict[species[i]],accessions[i]:proteins[i]}
 				except:
-					t_p_dict[species[i]] = {**t_p_dict, accessions[i]:proteins[i]}
+					t_p_dict = {**t_p_dict, species[i]:{accessions[i]:[proteins[i]]}}
 		return t_p_dict
