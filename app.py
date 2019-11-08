@@ -48,19 +48,19 @@ class App:
 
 	def get_taxa(self):
 		#given self.taxon_query, return list of
-		return self.ncbi_api.get_taxa(self.taxon_query)
+		return self.ncbi_api.get_taxa(self.taxon_query,"Taxonomy")
  
 
-	def taxa(self,typ):
+	def taxa(self,typ="all"):
 	#	gets list of all taxa produced from search
-		self.dataset = self.ncbi_api.taxa_protein_dict(self.search(),typ)
+		self.dataset = self.ncbi_api.taxa_protein_dict(self.get_fasta(),typ)
 	
 
 	def get_summary(self):
 		self.summary = self.ncbi_api.summary(self.protein_query,self.taxon_query)
 
-
+	#TODO refactor to be property
 	def get_fasta(self):
 		#initiates ncbi search using esearch and efetch
-		self.fasta = self.ncbi_api.retrieve(self.protein_query,self.taxon_query)
+		self.fasta = self.ncbi_api.retrieve(self.protein_query,self.taxon_query)	
 		return self.fasta

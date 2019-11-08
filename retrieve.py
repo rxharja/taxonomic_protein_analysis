@@ -7,8 +7,50 @@ class Retrieve():
 	def __init__(self):
 		self.fasta = None
 
+
+	@staticmethod	
+	def search_str(taxon,*argv):
+		if re.match("[0-9]+",taxon):
+			taxon = taxon + args[0]	
+		if len(argv) < 3:
+			return  "esearch -db {} -query '{}'".format(argv[1],taxon)
+		return "esearch -db {} -query '{}[Organism] AND {}[Protein] NOT PARTIAL NOT PREDICTED'"\
+			.format(argv[1],taxon,argv[2])
+
+	@staticmethod
+	def fetch_str(db,form):
+		return  " | efetch -db {} -format {}".format(db,form)
 	
-	def taxa_protein_dict(self,f,typ="proteins"):
+
+	@staticmethod
+	def run(process):
+		return subprocess.check_output(process,shell=True)
+
+
+	def get_taxa(self, taxon, db="Taxonomy"):
+		tax = self.run(self.search_str(taxon,"UID",db) + self.fetch_str(db,"txt"))
+		tax = tax.decode("utf-8").replace("    ",": ").replace("\n","")
+		tax = re.split(r"\d\. ",tax)
+		tax = list(filter(None,tax))
+		return tax
+
+
+	def summary(self, protein,taxon,db="Protein"):
+		outp = self.run(self.search_str(taxon,"txid",db,protein))
+		outp = outp.decode("utf-8")
+		return re.findall(r"<Count>.*</Count>",outp)[0].replace("<Count>","").replace("</Count>","")
+
+
+	def retrieve(self,protein,taxon,db="Protein",form="fasta"):
+		#returns fasta file given search parameters
+		outp = self.run(self.search_str(taxon,"txid",db,protein) + self.fetch_str(db,form))
+		self.fasta = outp.decode("utf-8")
+		print(outp.decode("utf-8"))
+		return outp.decode("utf-8")
+
+
+
+	def taxa_protein_dict(self,f,typ):
 		#returns list of all taxa from fasta files
 		t_p_dict = {}
 		species = [itm.replace("[","").replace("]","") for itm in re.findall(r"\[.*\]",f)]
@@ -25,32 +67,13 @@ class Retrieve():
 			proteins = re.split(r">.{0,150}]",f.replace("\n",""))
 			proteins = list(filter(None,proteins))
 			build_dict(proteins)
+		else:
+			accessions = [itm for itm in re.findall(r"[A-Z]+_?\d+\.\d",f)]
+			proteins = re.split(r">.{0,150}]",f.replace("\n",""))
+			proteins = list(filter(None,proteins))
+			for i in range(len(species)):
+				try:
+					t_p_dict[species[i]][accessions[i]] += [proteins[i]]
+				except:
+					t_p_dict[species[i]] = {**t_p_dict, accessions[i]:proteins[i]}
 		return t_p_dict
-	
-
-	def get_taxa(self, taxon, db="Taxonomy"):
-		if re.match("[0-9]+",taxon):
-			taxon = taxon+"[UID]"
-		tax = subprocess.check_output("esearch -db {} -query {} | efetch -format txt".format(db,taxon),shell=True)		
-		tax = tax.decode("utf-8").replace("    ",": ").replace("\n","")
-		tax = re.split(r"\d\. ",tax)
-		tax = list(filter(None,tax))
-		return tax
-
-
-	def summary(self, protein,taxon,db="Protein"):
-		if re.match("[0-9]+",taxon):
-			taxon = "txid"+taxon
-		outp = subprocess.check_output("esearch -db {} -query '{}[organism] AND {}[Protein] NOT PARTIAL NOT PREDICTED'".format(db,taxon,protein),shell=True)
-		outp = outp.decode("utf-8")
-		return re.findall(r"<Count>.*</Count>",outp)[0].replace("<Count>","").replace("</Count>","")
-
-
-	def retrieve(self,protein,taxon,db="Protein",form="fasta"):
-		#returns fasta file given search parameters
-		if re.match("[0-9]+",taxon):
-			taxon = "txid"+taxon
-		outp = subprocess.check_output("esearch -db {} -query '{}[organism] AND {}[Protein] NOT PARTIAL NOT PREDICTED' | efetch -db {} -format {}".format(db,taxon,protein,db,form),shell=True)
-		self.fasta = outp.decode("utf-8")
-		return outp.decode("utf-8")
-

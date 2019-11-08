@@ -1,20 +1,23 @@
 #!/usr/bin/env python3
 from app import App
 
+
 def handler(obj):
 	input_logic(obj)
 	obj.get_summary()
 	if proceed(obj.summary):
-		print("end of script")
-		return None
+		app.taxa()	
+		print(app.dataset)
 	else:
 		return handler(obj) 
 		
+
 def input_logic(obj):
 	while True:
 		if input_handler(obj):
 			if taxon_handler(obj):
 				break		
+
 
 def input_handler(obj):
 	display_choices(obj.taxon_query,obj.protein_query)
@@ -32,6 +35,7 @@ def input_handler(obj):
 	if user_change == "":
 		return True
 	return False
+
 
 def taxon_handler(obj):
 	print("Checking taxon choice, please wait...")
@@ -55,6 +59,7 @@ def taxon_handler(obj):
 				print("Make sure your choice is a valid number between 1 and {}, or 0 to exit.".format(len(taxons)))
 		return True
 
+
 def proceed(results):
 	ans = ex_check(input("your search produced {} results. Proceed?(y/n): ".format(results)))
 	if ans == "y":
@@ -69,8 +74,10 @@ def ex_check(inp):
 	return inp
 
 
+
 def display_choices(tax,prot):
 	return print("Your inputs were:\n\t1. Taxon: {}\n\t2. Protein: {}\n".format(tax,prot))
+
 
 app = App.from_class()
 handler(app)
