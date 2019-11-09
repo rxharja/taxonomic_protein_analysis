@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import subprocess,os
-from app.spinner import Spinner
 
 class Tools:
 
@@ -9,6 +8,7 @@ class Tools:
 		self.alignment_file = None
 		self.consensus = None
 		self.db = None
+		self.blast = None
 		if not os.path.isdir("./outputs"):
 			os.mkdir("./outputs")
 	
@@ -52,7 +52,7 @@ class Tools:
 	def cons(self,title="./outputs/consensus.fasta"):
 		if self.check_file(self.fasta):
 			self.consensus = title
-			self.run("cons -sequence {} -outseq {}".format(self.alignment_file,title))
+			self.run("cons -sprotein1 {} -outseq {}".format(self.alignment_file,title))
 		else:
 			print("Fasta file not generated, please generate fasta file first")
 			exit()
@@ -62,12 +62,23 @@ class Tools:
 		if self.check_file(self.consensus,self.fasta):
 			self.run("makeblastdb -in {} -dbtype prot -out {}".format(self.fasta,db_title))
 			self.db = db_title
-			return self.run("blastp -db {} -query {} -outfmt 6 > {}".format(self.db,self.consensus,b_file))
+			self.run("blastp -db {} -query {} -outfmt 6 > {}".format(self.db,self.consensus,b_file))
+			self.blast = b_file
 		else:
 			print("Consensus sequence needs to generated from align method, and fasta file must be available")
 
 
 	def plot(self):
-		self.align()
-		self.cons()
-		self.blast()
+		return None
+
+	
+	def filter(self,max_seq):
+		counter = 0
+		outf = "./outputs/list_{}.txt".format(max_seq)
+		with open(self.blast,'r') as bf: 
+			with open(outf,"a") as out:
+				for line in bf:
+					counter += 1
+					out.write(line.split()[1])
+
+		self.run("/localdisk/data/BPSM/Assignment2/pullseq -i {} -n {} > {}".format(self.fasta,outf,"filtered.fasta"))

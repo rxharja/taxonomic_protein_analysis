@@ -9,8 +9,8 @@ def handle(obj):
 	if handler.proceed(obj.summary):
 		with Spinner("Downloading data: "): obj.taxa()
 		print("Species: ",obj.total_species(),"Accessions: ",obj.total_seqs())
-		with Spinner("Writing fasta "): obj.write(obj.fasta)
-		with Spinner("Building plot "): obj.plot()
+		obj.write(obj.fasta)
+		obj.plot()
 	else:
 		return handle(obj) 
 

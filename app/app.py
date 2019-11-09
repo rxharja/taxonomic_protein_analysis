@@ -5,7 +5,7 @@
 from app.user_input import User_input
 from app.retrieve import Retrieve
 from app.tools import Tools
-
+from app.spinner import Spinner
 class App:
 	#Initializer / instance attributes
 	def __init__(self, taxonomy, protein):
@@ -60,7 +60,10 @@ class App:
 	
 
 	def plot(self):
-		self.tools.plot()
+		with Spinner("Aligning sequences "): self.tools.align()
+		with Spinner("Building consensus sequence "): self.tools.cons()
+		with Spinner("Running BLASTP "): self.tools.blast()
+		self.tools.filter(250)
 
 
 	def write(self,fasta,alt=""):
