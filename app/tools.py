@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import subprocess,os
+from app.spinner import Spinner
 
 class Tools:
 
@@ -57,11 +58,11 @@ class Tools:
 			exit()
 	
 	
-	def blast(self,title="./outputs/output_db"):
+	def blast(self,db_title="./outputs/output_db",b_file="./outputs/blastp.out"):
 		if self.check_file(self.consensus,self.fasta):
-			self.run("makeblastdb -in {} -dbtype prot -out {}".format(self.fasta,title))
-			self.db = title
-			self.run("blastp -db {} -query {}".format(self.db,self.consensus))
+			self.run("makeblastdb -in {} -dbtype prot -out {}".format(self.fasta,db_title))
+			self.db = db_title
+			return self.run("blastp -db {} -query {} -outfmt 6 > {}".format(self.db,self.consensus,b_file))
 		else:
 			print("Consensus sequence needs to generated from align method, and fasta file must be available")
 

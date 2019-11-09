@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
+from app.spinner import Spinner
+
 class Handler:
 
 	def __init__(self):
 		self.taxon_cache = {}
-		self.protein_cache = []
-
+		self.protein_cache = [
+]
 
 	def input_logic(self,obj):
 		while True:
@@ -32,11 +34,10 @@ class Handler:
 
 
 	def taxon_handler(self,obj):
-		print("Checking taxon choice, please wait...")
 		try:
 			taxons = self.taxon_cache[obj.taxon_query]	
 		except:
-			taxons = obj.get_taxa()
+			with Spinner("Checking taxon choice, please wait "): taxons = obj.get_taxa()
 			self.taxon_cache[obj.taxon_query] = taxons
 		if len(taxons) == 1:
 			return True
