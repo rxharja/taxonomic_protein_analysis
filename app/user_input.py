@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 import re
+from app.ld_json import Ld_json
 
 class User_input:
+	out = Ld_json().user_input
+
 	def __init__(self, user_input, param):
 		self.user_input = user_input
 		self.param = param
@@ -19,11 +22,11 @@ class User_input:
 		elif param == "protein":
 			txt = "Protein family: "
 		else:
-			print("invalid param value, only taxonomy or protein allowed")
+			print(cls.out['param_error'])
 			exit()
 		inp = input(txt)
 		inp = inp.lower()
-		while cls.check_input(param,inp):
+		while cls.check_input(cls.out,param,inp):
 			inp = input(txt)
 		return cls(inp,param)
 
@@ -37,30 +40,30 @@ class User_input:
 	def val(self,new_input):
 		self.user_input = new_input
 
-	
-	@staticmethod
-	def check_input(param,inp):
+
+	@staticmethod	
+	def check_input(out,param,inp):
 		if inp == "exit":
 			exit()
 		if param == "taxonomy":
 			if re.match(".*[0-9]+.*",inp):
 				if re.match("txid[0-9]+",inp):
-					print("sadly esearch is finicky with the txid## format for taxon IDs. Try again with only the numbers instead!")
+					print(out['txid'])
 					return True
 				elif re.match("[0-9]+\[uid\]",inp):
-					print("don't worry about suffixing the taxon ID with [UID], the program will handle that for you, try again with only numbers instead!")
+					print(out['uid'])
 				elif re.match("[0-9]+",inp):
 					return False
 				else:
-					print("Taxon inputs can either be all numbers or all letters.")
+					print(out['alphanumeric'])
 					return True
 			if not re.match("^[a-z]*$",inp):
-				print("No whitespaces are allowed in your search query.")
+				print(out['whitespace'])
 				return True
 			return False
 		else:
 			if re.match("^[a-z]+[a-z0-9-_]*[a-z0-9]$",inp):
 				return False
 			else:
-				print("Invalid protein name, make sure there are no spaces.")
+				print(out['protein'])
 				return False

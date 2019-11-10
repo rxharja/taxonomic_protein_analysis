@@ -6,9 +6,12 @@ from app.user_input import User_input
 from app.retrieve import Retrieve
 from app.tools import Tools
 from app.spinner import Spinner
+from app.ld_json import Ld_json
+
 class App:
 	#Initializer / instance attributes
 	def __init__(self, taxonomy, protein):
+		self.out = Ld_json().app
 		self.Taxonomy = taxonomy
 		self.Protein = protein
 		self.ncbi_api = Retrieve()
@@ -17,6 +20,7 @@ class App:
 		self.fasta = None
 		self.summary = None
 	
+
 	@classmethod
 	def from_class(cls):
 		return cls(User_input.from_input("taxonomy"),
@@ -59,18 +63,18 @@ class App:
 		return self.ncbi_api.get_taxa(self.taxon_query,"Taxonomy")
 	
 
-	def plot(self):
+	def plot(self,max_acc=250):
 		with Spinner("Aligning sequences "): self.tools.align()
 		with Spinner("Building consensus sequence "): self.tools.cons()
 		with Spinner("Running BLASTP "): self.tools.blast()
-		self.tools.filter(250)
+		self.tools.filter(max_acc)
 
 
 	def write(self,fasta,alt=""):
 		if fasta:
 			self.tools.write(fasta,self.protein_query,self.taxon_query)
 		else:
-			print("Missing fasta file! Please run get_fasta first.")
+			print(self.out['missing_fasta'])
 
 
 	def taxa(self,typ="all"):

@@ -22,7 +22,7 @@ class Spinner:
     def spinner_task(self):
         spaces = "                                                          "
         while self.busy:
-            sys.stdout.write(self.out + next(self.spinner_generator)+ spaces)
+            sys.stdout.write(self.out + next(self.spinner_generator) + spaces)
             sys.stdout.flush()
             time.sleep(self.delay)
             sys.stdout.write("\r")

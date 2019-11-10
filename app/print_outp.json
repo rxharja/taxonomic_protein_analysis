@@ -1,0 +1,35 @@
+//JSON file containing all print statements that the program outputs to the screen, this includes 
+//user input as well potential error messages.
+//When passed into a class pulling the error messages, this is passed into the ld_json class which converts
+//this json into a dictionary. The dictionary is then passed into another class, such as user_input, handler
+//or tools. From there it is filtered for the appropriate outputs by calling Ld_json().class_name.
+//From there, each individual error message can be accessed like a normal dictionary.
+{"app":
+  {
+   "missing_fasta":"Missing fasta file! Please run get_fasta first."
+  },
+ "user_input":
+  {"param_error":"invalid param value, only taxonomy or protein allowed",
+   "txid":"sadly esearch is finicky with the txid## format for taxon IDs. Try again with only the numbers instead!",
+   "uid":"don't worry about suffixing the taxon ID with [UID], the program will handle that for you, try again with only numbers instead!",
+   "alphanumeric":"Taxon inputs can either be all numbers or all letters.",
+   "whitespace":"No whitespaces are allowed in your search query.",
+   "protein":"Invalid protein name, make sure there are no spaces."  
+  },
+ "handler":
+  {"user_change":"To change an input, enter 1 for taxon, 2 for protein, or 3 for both. otherwise just hit enter to move on.\nValue: ",
+   "improper_input":"Proper inputs would be:\n 1 for taxon, 2 for protein, 3 for both, 'enter' to move on, or 'exit' to exit the program.",
+   "no_taxons":"Doesn't seem like your taxon choice produced a proper taxon. Try again?",
+   "vague_taxons":"Taxon query too vague. Narrow down by selecting a number, or enter 0 to choose another taxon or protein:",
+   "improper_choice":"Make sure your choice is a valid number between 1 and {}, or 0 to exit.",
+   "no_results":"Sorry, your search produced {} results. That's not enough to continue. Please change a criteria to continue",
+   "results":"your search produced {} results. Enter to proceed: ",
+   "display":"Your inputs were:\n\t1. Taxon: {}\n\t2. Protein: {}\n"
+  },
+ "tools":
+  {
+   "alignment_err":"fasta file needed for clustalo alignment.",
+   "consensus_err":"Fasta file not generated, please generate fasta file first",
+   "blast_err":"Consensus sequence needs to generated from align method, and fasta file must be available"
+  }
+}
