@@ -24,6 +24,7 @@
   {
    "alignment_err":"fasta file needed for clustalo alignment.",
    "consensus_err":"Fasta file not generated, please generate fasta file first",
-   "blast_err":"Consensus sequence needs to generated from align method, and fasta file must be available"
+   "blast_err":"Consensus sequence needs to generated from align method, and fasta file must be available",
+   "plot_err":"Missing necessary input file for graph generation! Either a filtered list of your aligned top 250 accessions in fasta format or your original alignment file will do if its less than 250 sequences."
   }
 }

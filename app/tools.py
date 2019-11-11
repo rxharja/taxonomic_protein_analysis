@@ -80,21 +80,24 @@ class Tools:
 	def blast(self,db_file="./outputs/output_db",b_file="./outputs/blastp.out"):
 		#runs two processes, first creates a blast databae given fasta file to output_db
 		if self.check_file(self.consensus,self.fasta):
-			self.run("makeblastdb -in {} -dbtype prot -S -out {}".format(self.fasta,db_file))
+			self.run("makeblastdb -in {} -dbtype prot -out {}".format(self.fasta,db_file))
 			self.db = db_file
-			self.run("blastp -db {} -query {} -max_hsps 1 -outfmt 6 > {}".format(self.db,self.consensus,b_file))
+			self.run("blastp -db {} -query {} -max_hsps 1 -outfmt 6 > {}"\
+				.format(self.db,self.consensus,b_file))
 			self.blast_file = b_file
 		else:
 			self.throw_err(self.out['blast_err'])
 
 
-	def plot(self,fasta="",winsize='4',graph='x11'):
-		if not fasta:
-			if self.top_250:
-				fasta = self.top_250
+	def plot(self,algn_file="",winsize='4',graph='svg',title="plotcon"):
+		if not algn_file:
+			if self.alignment_file:
+				algn_file = self.alignment_file
 			else:
 				self.throw_err(self.out['plot_err'])
-		self.run("plotcon {} -winsize {} -graph {}".format(fasta,winsize,graph))
+		self.run("plotcon {} -winsize {} -graph {} -gdirectory {} -goutfile {} -auto Y"\
+			.format(algn_file,winsize,graph,"./outputs",title))
+		self.run("(display ./outputs/{}.{} &)".format(title,graph))	
 
 	
 	def filter(self,max_seq):
@@ -107,5 +110,6 @@ class Tools:
 					if counter >= max_seq: break
 					counter += 1
 					out.write(line.split()[1]+"\n")
-		self.run("/localdisk/data/BPSM/Assignment2/pullseq -i {} -n {} > {}".format(self.fasta,outf,filtered))
-		self.top_250 = filtered
+		self.run("/localdisk/data/BPSM/Assignment2/pullseq -i {} -n {} > {}"\
+			.format(self.alignment_file,outf,filtered))
+		self.fasta,self.top_250 = filtered,filtered

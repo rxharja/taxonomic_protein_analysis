@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3self.tools.filter
 #import user_input, retrieve, and plot classes and abstract them
 #this class is the main interface for handler.py to control the flow
 #of the application.
@@ -53,7 +53,7 @@ class App:
 	def total_species(self):
 		return len(self.dataset.keys())
 
-	
+
 	def total_seqs(self):
 		return sum(1 for species in self.dataset for acc in self.dataset[species])
 	
@@ -63,12 +63,13 @@ class App:
 		return self.ncbi_api.get_taxa(self.taxon_query,"Taxonomy")
 	
 
-	def plot(self,max_acc=250):
+	def plot(self,max_acc=250):	
 		with Spinner("Aligning sequences "): self.tools.align()
-		with Spinner("Building consensus sequence "): self.tools.cons()
-		with Spinner("Running BLASTP "): self.tools.blast()
-		self.tools.filter(max_acc)
-		with Spinner("Plotting "): self.tools.plot()
+		if int(self.summary) > max_acc:
+			with Spinner("Building consensus sequence "): self.tools.cons()
+			with Spinner("Running BLASTP "): self.tools.blast()
+			self.tools.filter(max_acc)
+		self.tools.plot(title="{}_{}_graph".format(self.taxon_query,self.protein_query))
 
 
 	def write(self,fasta,alt=""):

@@ -12,7 +12,7 @@ def handle(obj,handler):
 		obj.write(obj.fasta)
 		obj.plot()
 	else:
-		return handle(obj) 
+		return handle(obj,handler) 
 
 def run_app():
 	app = App.from_class()
