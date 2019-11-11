@@ -3,7 +3,7 @@ from app.app import App
 from app.handler import Handler
 from app.spinner import Spinner
 
-def handle(obj):
+def handle(obj,handler):
 	handler.input_logic(obj)
 	with Spinner("Generating summary "): obj.get_summary()
 	if handler.proceed(obj.summary):
@@ -14,6 +14,9 @@ def handle(obj):
 	else:
 		return handle(obj) 
 
-app = App.from_class()
-handler = Handler()
-handle(app)
+def run_app():
+	app = App.from_class()
+	handler = Handler()
+	handle(app,handler)
+
+run_app()

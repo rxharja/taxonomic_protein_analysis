@@ -13,9 +13,16 @@ class Tools:
 		self.consensus = None
 		self.db = None
 		self.blast_file = None
+		self.top_250 = None
 		if not os.path.isdir("./outputs"):
 			os.mkdir("./outputs")
 	
+
+	@staticmethod
+	def throw_err(outp):
+		print(outp)
+		exit()
+
 
 	@staticmethod
 	def check_file(*argv):
@@ -38,25 +45,25 @@ class Tools:
 
 	def write(self,inp_f,p="protein",t="taxon",alt=""):
 		p = p.replace(" ","_")
+		t = t.replace(" ","_")
 		title = "./outputs/"
 		if alt == "":
 			title +="{}_{}.fasta".format(t,p)
 		else:
 			title += alt
 		self.fasta = title
-		f = open(title,"w")
-		f.write(inp_f)
+#		f = open(title,"w")
+#		f.write(inp_f)
 
 
-	def align(self,title="./outputs/alignment.out"):
+	def align(self,title="./outputs/alignment.fasta"):
 		#calls clustalo to align the fasta file 
 		#outputs it to default alignment,out in outputs
 		if self.check_file(self.fasta):
 			self.alignment_file = title
-			self.run("clustalo -i {} -t protein -o {} --force".format(self.fasta,title))
+			self.run("clustalo -i {} -t protein --force -o {}".format(self.fasta,title))
 		else:
-			print(self.out['alignment_err'])
-			exit()
+			self.throw_err(self.out['alignment_err'])
 
 
 	def cons(self,title="./outputs/consensus.fasta"):
@@ -65,35 +72,40 @@ class Tools:
 		#to outputs folder
 		if self.check_file(self.fasta):
 			self.consensus = title
-			self.run("cons -sprotein1 {} -outseq {}".format(self.alignment_file,title))
+			self.run("cons -sprotein1 {} -outseq {} -auto Y".format(self.alignment_file,title))
 		else:
-			print(self.out['consensus_err'])
-			exit()
+			self.throw_err(self.out['consensus_err'])
 	
 	
 	def blast(self,db_file="./outputs/output_db",b_file="./outputs/blastp.out"):
 		#runs two processes, first creates a blast databae given fasta file to output_db
 		if self.check_file(self.consensus,self.fasta):
-			self.run("makeblastdb -in {} -dbtype prot -out {}".format(self.fasta,db_file))
+			self.run("makeblastdb -in {} -dbtype prot -S -out {}".format(self.fasta,db_file))
 			self.db = db_file
-			self.run("blastp -db {} -query {} -outfmt 6 > {}".format(self.db,self.consensus,b_file))
+			self.run("blastp -db {} -query {} -max_hsps 1 -outfmt 6 > {}".format(self.db,self.consensus,b_file))
 			self.blast_file = b_file
 		else:
-			print(self.out['blast_err'])
+			self.throw_err(self.out['blast_err'])
 
 
-	#def plot(self):
-	#	return None
+	def plot(self,fasta="",winsize='4',graph='x11'):
+		if not fasta:
+			if self.top_250:
+				fasta = self.top_250
+			else:
+				self.throw_err(self.out['plot_err'])
+		self.run("plotcon {} -winsize {} -graph {}".format(fasta,winsize,graph))
 
 	
 	def filter(self,max_seq):
 		counter = 0
 		outf = "./outputs/list_{}.txt".format(max_seq)
-		filtered = "./outputs/top{}_filtered.fasta"
+		filtered = "./outputs/top{}_filtered.fasta".format(max_seq)
 		with open(self.blast_file,'r') as bf: 
 			with open(outf,"a") as out:
 				for line in bf:
+					if counter >= max_seq: break
 					counter += 1
 					out.write(line.split()[1]+"\n")
-
 		self.run("/localdisk/data/BPSM/Assignment2/pullseq -i {} -n {} > {}".format(self.fasta,outf,filtered))
+		self.top_250 = filtered

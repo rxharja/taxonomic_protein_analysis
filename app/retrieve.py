@@ -10,7 +10,8 @@ class Retrieve():
 
 	@staticmethod	
 	def search_str(taxon,*argv):
-		if re.match("[0-9]+",taxon):
+		if re.match("\d+",taxon):
+			#TODO: figure out order of numbers and txid
 			taxon = taxon + args[0]	
 		if len(argv) < 3:
 			return  "esearch -db {} -query '{}'".format(argv[1],taxon)
@@ -19,12 +20,14 @@ class Retrieve():
 
 	@staticmethod
 	def fetch_str(db,form):
-		return  " | efetch -db {} -format {}".format(db,form)
+		return  " | efetch -db {} -format {} ".format(db,form)
 	
 
 	@staticmethod
-	def run(process):
-		return subprocess.check_output(process,shell=True)
+	def run(process,c=True):
+		if c:
+			return subprocess.check_output(process,shell=True)
+		return subprocess.call(process,shell=True)
 
 
 	def get_taxa(self, taxon, db="Taxonomy"):
@@ -43,10 +46,14 @@ class Retrieve():
 
 	def retrieve(self,protein,taxon,db="Protein",form="fasta"):
 		#returns fasta file given search parameters
-		outp = self.run(self.search_str(taxon,"txid",db,protein) + self.fetch_str(db,form))
-		self.fasta = outp.decode("utf-8")
-		return outp.decode("utf-8")
-
+		protein_f = protein.replace(" ","_")
+		taxon_f = taxon.replace(" ","_")
+		fasta_file = "./outputs/{}_{}.fasta".format(taxon_f,protein_f)
+		self.run(self.search_str(taxon,"txid",db,protein)+self.fetch_str(db,form)+"> {}".format(fasta_file),False)
+		outp = open(fasta_file,"r").read()
+		return outp
+		#self.fasta = outp.decode("utf-8")
+		#return outp.decode("utf-8")
 
 
 	def taxa_protein_dict(self,f,typ):

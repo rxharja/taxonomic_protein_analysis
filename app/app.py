@@ -68,6 +68,7 @@ class App:
 		with Spinner("Building consensus sequence "): self.tools.cons()
 		with Spinner("Running BLASTP "): self.tools.blast()
 		self.tools.filter(max_acc)
+		with Spinner("Plotting "): self.tools.plot()
 
 
 	def write(self,fasta,alt=""):
