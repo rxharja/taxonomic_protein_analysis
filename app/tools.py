@@ -93,8 +93,8 @@ class Tools:
   def blast(self,db_file="output_db",b_file="blastp.out"):
     #runs two processes, first creates a blast database given fasta file to output_db
     if self.check_file(self.consensus,self.fasta):
-      db_file = self.path + db_file
-      b_file = self.path + b_file
+      db_file = self.path + db_file.replace(" ","_")
+      b_file = self.path + b_file.replace(" ","_")
       self.run("makeblastdb -in {} -dbtype prot -out {}".format(self.fasta,db_file))
       self.db = db_file
       self.run("blastp -db {} -query {} -max_hsps 1 -outfmt 6 > {}"\
@@ -122,11 +122,12 @@ class Tools:
       align = self.alignment_file
     elif acc == "" or align == "":
       throw_err(self.out['motif_err'])
-    self.splitter.process_motifs(acc,align)
+    self.splitter.process_motifs(align,acc)
   
   
   def filter(self,max_seq,title="filtered_alignment.fasta"):
     counter = 0
+    title = title.replace(" ","_")
     outf = self.path + "_accessions_{}".format(max_seq) + title
     filtered = self.path + title + "filtered.fasta"
     file_to_process = self.list_of_acc
@@ -139,4 +140,4 @@ class Tools:
           out.write(line.split()[1]+"\n")
     self.run("/localdisk/data/BPSM/Assignment2/pullseq -i {} -n {} > {}"\
       .format(self.alignment_file,outf,filtered))
-    self.fasta,self.top_250 = filtered,filtered
+    self.fasta,self.list_of_acc = filtered,outf

@@ -19,13 +19,16 @@ class Splitter:
                        .format(fasta,loc,loc+'.fasta'),shell=True)
 
 
-  def process_motifs(self,accs,fasta):
+  def process_motifs(self,fasta,accs):
     self.split_fasta(accs,fasta)
     with open(accs,"r") as f:
       for line in f:
         line = self.path + line.replace("\n","") + ".fasta"
-        print(line)
-        motif = subprocess.check_output("patmatmotifs {} stdout -auto Y| grep 'HitCount' "\
-                                        .format(line),shell=True).decode('utf-8')
-        if motif != "# HitCount: 0":
-          subprocess.call("patmatmotifs {} stdout -auto Y >> {}".format(line,self.path+"motifs.out"),shell=True)
+        try:
+          motif = subprocess.check_output("patmatmotifs {} stdout -auto Y| grep 'HitCount' "\
+                                          .format(line),shell=True).decode('utf-8')
+          if int(motif.split()[-1])!=0:
+            subprocess.call("patmatmotifs {} stdout -auto Y >> {}"\
+                            .format(line,self.path+"motifs.out"),shell=True)
+        except:
+          print("Can't process {}, non-standard accession!".format(line))

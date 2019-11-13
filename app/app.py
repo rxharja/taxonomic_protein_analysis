@@ -70,7 +70,7 @@ class App:
                 title="{}_{}_alignment.fasta".format(self.taxon_query,self.protein_query))
 
 
-  def plot(self,max_acc=250):  
+  def plot(self,max_acc=25):  
     self.write()
     #self.tools.filter(max_acc,title="{}_{}".format(self.taxon_query,self.protein_query))
     with Spinner("Building consensus sequence "): self.tools.cons(title="{}_{}_cons.fasta"\
