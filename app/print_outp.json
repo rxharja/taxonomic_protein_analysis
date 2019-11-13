@@ -4,6 +4,7 @@
   },
  "user_input":
   {"param_error":"invalid param value, only taxonomy or protein allowed",
+   "no_input":"Search query cannot be empty",
    "txid":"sadly esearch is finicky with the txid## format for taxon IDs. Try again with only the numbers instead!",
    "uid":"don't worry about suffixing the taxon ID with [UID], the program will handle that for you, try again with only numbers instead!",
    "alphanumeric":"Taxon inputs can either be all numbers or all letters.",
@@ -18,13 +19,16 @@
    "improper_choice":"Make sure your choice is a valid number between 1 and {}, or 0 to exit.",
    "no_results":"Sorry, your search produced {} results. That's not enough to continue. Please change a criteria to continue",
    "results":"your search produced {} results. Enter to proceed: ",
-   "display":"Your inputs were:\n\t1. Taxon: {}\n\t2. Protein: {}\n"
+   "display":"Your inputs were:\n\t1. Taxon: {}\n\t2. Protein: {}\n",
+   "forward":"Would you like to proceed with {}?",
+   "welcome":"\nWelcome to Taxonomic Protein Analysis.py!\nType exit,quit, or q at any time to quit the program.\n\n1.[{}] Determine/Plot Protein Conservation\n2.[{}] Scan sequences for motifs\n3.[{}] *Wildcard.\n\nEverything marked with X will be run, if you want to change that, type 1,2,3 to select/unselect a choice.\nIf nothing is selected, the program will download your query fasta file and produce a protein alignment in the outputs folder.\n If you're happy with your choices, just hit enter to move on!"
   },
  "tools":
   {
    "alignment_err":"fasta file needed for clustalo alignment.",
    "consensus_err":"Fasta file not generated, please generate fasta file first",
    "blast_err":"Consensus sequence needs to generated from align method, and fasta file must be available",
-   "plot_err":"Missing necessary input file for graph generation! Either a filtered list of your aligned top 250 accessions in fasta format or your original alignment file will do if its less than 250 sequences."
+   "plot_err":"Missing necessary input file for graph generation! Either a filtered list of your aligned top 250 accessions in fasta format or your original alignment file will do if its less than 250 sequences.",
+   "motif_err":"Missing either a list of accessions or an alignment file"
   }
 }
