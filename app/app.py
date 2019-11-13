@@ -65,26 +65,26 @@ class App:
     return self.ncbi_api.get_taxa(self.taxon_query,"Taxonomy")
   
 
-  def align(self):
-    with Spinner("Aligning sequences "): self.tools.align(self.fasta_file,\
-                title="{}_{}_alignment.fasta".format(self.taxon_query,self.protein_query))
-
-
-  def plot(self,max_acc=25):  
+  def align(self,max_acc=250):
     self.write()
-    #self.tools.filter(max_acc,title="{}_{}".format(self.taxon_query,self.protein_query))
+    with Spinner("Aligning sequences "): self.tools.align(self.fasta_file,\
+                title="{}_{}_alignment.fasta".format(self.taxon_query,self.protein_query)) 
     with Spinner("Building consensus sequence "): self.tools.cons(title="{}_{}_cons.fasta"\
                  .format(self.taxon_query,self.protein_query))
     with Spinner("Running BLASTP "): self.tools.blast(db_file="{}_{}_db"\
                  .format(self.taxon_query,self.protein_query),b_file="{}_{}_blast.out"\
                  .format(self.taxon_query,self.protein_query))
     self.tools.filter(max_acc,title="{}_{}".format(self.taxon_query,self.protein_query))
+
+
+  def plot(self):  
     self.tools.plot(title="{}_{}_graph"\
                    .format(self.taxon_query,self.protein_query))
-  
+ 
 
   def generate_motifs(self):
-    with Spinner("Writing accessions "): self.write()
+    if not self.tools.list_of_acc: 
+      with Spinner("Writing accessions "): self.write()
     with Spinner("Generating motif files "): self.tools.motifs()
 
 

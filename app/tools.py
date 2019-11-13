@@ -117,6 +117,7 @@ class Tools:
 
 
   def motifs(self,acc="",align=""):
+    print(self.list_of_acc)
     if self.check_file(self.list_of_acc, self.alignment_file):
       acc = self.list_of_acc
       align = self.alignment_file
@@ -128,7 +129,7 @@ class Tools:
   def filter(self,max_seq,title="filtered_alignment.fasta"):
     counter = 0
     title = title.replace(" ","_")
-    outf = self.path + "_accessions_{}".format(max_seq) + title
+    outf = self.path + "accessions_{}_".format(max_seq) + title
     filtered = self.path + title + "filtered.fasta"
     file_to_process = self.list_of_acc
     if self.blast_file: file_to_process = self.blast_file
@@ -140,4 +141,4 @@ class Tools:
           out.write(line.split()[1]+"\n")
     self.run("/localdisk/data/BPSM/Assignment2/pullseq -i {} -n {} > {}"\
       .format(self.alignment_file,outf,filtered))
-    self.fasta,self.list_of_acc = filtered,outf
+    self.alignment_file,self.list_of_acc = filtered,outf
