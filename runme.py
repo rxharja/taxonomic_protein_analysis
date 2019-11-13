@@ -7,12 +7,14 @@ def handle(obj,handler):
   handler.input_logic(obj)
   with Spinner("Generating summary "): obj.get_summary()
   if handler.proceed(obj.summary):
-    with Spinner("Downloading data: "): obj.build_dataset()
-    print("Species: ",obj.total_species(),"Accessions: ",obj.total_seqs())
-    obj.align()
-    if handler.path_list[0]:obj.plot()
-    if handler.path_list[1]:obj.generate_motifs()
-    #if handler.path_list[2]: obj.wildcard()
+    with Spinner("Downloading data "): obj.build_dataset()
+    if handler.count_results(obj.total_seqs(),obj.total_species()):
+      obj.align()
+      if handler.path_list[0]:obj.plot()
+      if handler.path_list[1]:obj.generate_motifs()
+      #if handler.path_list[2]: obj.wildcard()
+    else:
+      return handle(obj,handler)
   else:
     return handle(obj,handler) 
 
