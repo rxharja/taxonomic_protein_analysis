@@ -17,6 +17,7 @@ class Tools:
     self.blast_file = None
     self.top_250 = None
     self.list_of_acc = None
+    self.motifs_file = None
     self.path = path
     self.splitter = Splitter()
 
@@ -116,15 +117,15 @@ class Tools:
     self.run("(display './outputs/{}.{}' &)".format(title,graph))  
 
 
-  def motifs(self,acc="",align=""):
-    print(self.list_of_acc)
+  def motifs(self,title,acc="",align=""): 
     if self.check_file(self.list_of_acc, self.alignment_file):
       acc = self.list_of_acc
       align = self.alignment_file
     elif acc == "" or align == "":
       throw_err(self.out['motif_err'])
-    self.splitter.process_motifs(align,acc)
-  
+    self.motifs_file = self.splitter.process_motifs(align,acc,title)
+    return open(self.motifs_file,'r').read()
+
   
   def filter(self,max_seq,title="filtered_alignment.fasta"):
     counter = 0
@@ -142,3 +143,8 @@ class Tools:
     self.run("/localdisk/data/BPSM/Assignment2/pullseq -i {} -n {} > {}"\
       .format(self.alignment_file,outf,filtered))
     self.alignment_file,self.list_of_acc = filtered,outf
+
+
+  def filter_redundant(self,fasta,data,title): 
+    raw_fasta,self.fasta = self.splitter.process_redundant(fasta,data,self.path+title.replace(" ","_")+"_no_redundant.fasta")
+    return raw_fasta,self.fasta

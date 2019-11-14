@@ -1,6 +1,7 @@
 {"app":
   {
-   "missing_fasta":"Missing fasta file! Please run get_fasta first."
+   "missing_fasta":"Missing fasta file! Please run get_fasta first.",
+   "missing_dataset":"Processing redundant sequences requires a dictionary structure such as {'species':{'accession':some_value}}. One is generated when the build_dataset() method is called."
   },
  "user_input":
   {"param_error":"invalid param value, only taxonomy or protein allowed",
@@ -21,6 +22,7 @@
    "results":"your search produced {} results. Enter to proceed: ",
    "display":"Your inputs were:\n\t1. Taxon: {}\n\t2. Protein: {}\n",
    "forward":"Would you like to proceed with {}?",
+   "continue_results":"Your search produced {} sequences between {} species. Enter to continue: ",
    "welcome":"\nWelcome to Taxonomic Protein Analysis.py!\nType exit,quit, or q at any time to quit the program.\n\n1.[{}] Determine/Plot Protein Conservation\n2.[{}] Scan sequences for motifs\n3.[{}] *Wildcard.\n\nEverything marked with X will be run, if you want to change that, type 1,2,3 to select/unselect a choice.\nIf nothing is selected, the program will download your query fasta file and produce a protein alignment in the outputs folder.\n If you're happy with your choices, just hit enter to move on!"
   },
  "tools":

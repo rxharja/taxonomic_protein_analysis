@@ -9,10 +9,12 @@ def handle(obj,handler):
   if handler.proceed(obj.summary):
     with Spinner("Downloading data "): obj.build_dataset()
     if handler.count_results(obj.total_seqs(),obj.total_species()):
-      obj.align()
-      if handler.path_list[0]:obj.plot()
-      if handler.path_list[1]:obj.generate_motifs()
-      #if handler.path_list[2]: obj.wildcard()
+      obj.process_redundant()
+      if handler.count_results(obj.total_seqs(),obj.total_species()):
+        obj.align()
+        if handler.path_list[0]:obj.plot()
+        if handler.path_list[1]:print(obj.generate_motifs())
+        #if handler.path_list[2]: obj.wildcard()
     else:
       return handle(obj,handler)
   else:

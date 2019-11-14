@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#/usr/bin/env python3
 
 #import user_input, retrieve, and plot classes and abstract them
 #this class is the main interface for handler.py to control the flow
@@ -21,6 +21,7 @@ class App:
     self.fasta = None
     self.summary = None
     self.fasta_file = None
+    self.motifs = None
   
 
   @classmethod
@@ -85,9 +86,10 @@ class App:
   def generate_motifs(self):
     if not self.tools.list_of_acc: 
       with Spinner("Writing accessions "): self.write()
-    with Spinner("Generating motif files "): self.tools.motifs()
-
-
+    with Spinner("Generating motif files "): 
+      self.motifs = self.tools.motifs("{}_{}_motifs.out".format(self.taxon_query,self.protein_query)) 
+    return self.motifs 
+     
   def write(self,alt=""):
     if self.dataset:
       self.tools.write(self.dataset,self.protein_query,self.taxon_query)
@@ -97,7 +99,9 @@ class App:
 
   def build_dataset(self,typ="all"):
   #  gets list of all taxa produced from search
-    self.dataset = self.ncbi_api.taxa_protein_dict(self.get_fasta(),typ)
+    if self.fasta_file == None:
+      self.dataset = self.ncbi_api.taxa_protein_dict(self.get_fasta(),typ)
+    else:  self.dataset = self.ncbi_api.taxa_protein_dict(self.fasta,typ)
     return self.dataset  
 
 
@@ -111,3 +115,14 @@ class App:
     #initiates ncbi search using esearch and efetch
     self.fasta,self.fasta_file = self.ncbi_api.retrieve(self.protein_query,self.taxon_query)  
     return self.fasta
+
+
+  def process_redundant(self,dataset=None):
+    if self.dataset: 
+      dataset = self.dataset
+    elif not dataset:
+      print(self.out['missing_dataset'])
+    with Spinner("Yeeting redundant data "):
+      self.fasta,self.fasta_file = self.tools.filter_redundant(self.fasta_file,self.dataset,"{}_{}"\
+                                  .format(self.taxon_query,self.protein_query)) 
+      self.build_dataset() 

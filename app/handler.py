@@ -6,10 +6,12 @@ class Handler:
   #dictionary containing all statements to print to the screen for user
   out = Ld_json().handler
   
+
   #initialize taxon search cache
   def __init__(self,pth):
     self.taxon_cache = {}
     self.path_list = pth
+
 
   #handle user input logic: If user is happy with their taxon and protein
   #options, then move on to taxon handler. Taxon handler will check the 
@@ -22,6 +24,7 @@ class Handler:
       if self.input_handler(obj):
         if self.taxon_handler(obj):
           break    
+
 
   #call display choices which prints a string to the screen that shows what the 
   #user inputted as queries for taxon and protein. Here the user has the option
@@ -43,6 +46,7 @@ class Handler:
     if user_change == "":
       return True
     return False
+
 
   #sometimes taxon queries are too vague and won't generate an appropriate data set.
   #taxon_handler checks the query against the taxonomy database to see if the query
@@ -99,6 +103,14 @@ class Handler:
       return False
 
 
+  def count_results(self,seq,spec):
+    inp = self.ex_check(input(self.out['continue_results'].format(seq,spec)))
+    if inp=="": return True
+    else: 
+      print("Returning")
+      return False
+
+    
   @staticmethod
   def ex_check(inp):
     exits = ['exit','quit','q']
@@ -120,9 +132,10 @@ class Handler:
     #displays user's chosen queries on screen.
     return print(self.out['display'].format(tax,prot))
 
+
   @classmethod
   def welcome(cls):
-    #TODO rename wildcad
+    #TODO rename wildcard
     path_list = [True,True,True]
     while True:    
       path_vals = ['X' if itm  else ' ' for itm in path_list]
