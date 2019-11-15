@@ -63,7 +63,7 @@ class Tools:
     self.list_of_acc = title
     with open(title,"w+") as f:
       for species in inp_f.keys():
-        for acc in inp_f[species].keys():
+        for acc in inp_f[species]:
           f.write(acc+"\n")
 
 
@@ -148,3 +148,4 @@ class Tools:
   def filter_redundant(self,fasta,data,title): 
     raw_fasta,self.fasta = self.splitter.process_redundant(fasta,data,self.path+title.replace(" ","_")+"_no_redundant.fasta")
     return raw_fasta,self.fasta
+

@@ -14,6 +14,8 @@ class Splitter:
   def skip(self,acc,title):
     subprocess.call('skipredundant -sequences {} -threshold {} -outseq stdout -auto Y >> {}'\
                     .format(acc,self.threshold_val,title),shell=True)
+    subprocess.call('skipredundant -sequences {} -threshold {} -redundantoutseq stdout -auto Y -warning N >> {}'\
+                    .format(acc,self.threshold_val,"to_pop"),shell=True)
 
 
   def pull(self,fasta,acc):
@@ -26,10 +28,11 @@ class Splitter:
       fpath = self.path_species+species.replace(" ","_")
       fpath_fasta = self.path_species+species.replace(" ","_")+'.fasta'
       with open(fpath,'w') as f:
-        for acc in dic[species].keys():
+        for acc in dic[species]:
           print(acc,file=f)
       self.pull(fasta,fpath)
-      self.skip(fpath_fasta,title)
+      self.skip(fpath_fasta,title) 
+    subprocess.call('rm -rf *.keep',shell=True)
     return open(title,"r").read(),title
 
 

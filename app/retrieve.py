@@ -22,6 +22,9 @@ class Retrieve():
   def fetch_str(db,form):
     return  " | efetch -db {} -format {} ".format(db,form)
   
+  @staticmethod
+  def summary_str(form):
+    return " | esummary -format {} ".format(form)
 
   @staticmethod
   def run(process,c=True):
@@ -48,18 +51,18 @@ class Retrieve():
     #returns fasta file given search parameters
     protein_f = protein.replace(" ","_")
     taxon_f = taxon.replace(" ","_")
-    fasta_file = "./outputs/{}_{}.fasta".format(taxon_f,protein_f)
-    self.run(self.search_str(taxon,"txid",db,protein)+self.fetch_str(db,form)+"> {}".format(fasta_file),False)
-    outp = open(fasta_file,"r").read()
-    return outp,fasta_file
-    #self.fasta = outp.decode("utf-8")
-    #return outp.decode("utf-8")
+    if form=="fasta": 
+      fasta_file = "./outputs/{}_{}.fasta".format(taxon_f,protein_f)
+      self.run(self.search_str(taxon,"txid",db,protein)+self.fetch_str(db,form)+"> {}".format(fasta_file),False)
+      outp = open(fasta_file,"r").read()
+      return outp,fasta_file
+    return self.run(self.search_str(taxon,"txid",db,protein)+self.fetch_str(db,form)).decode("utf-8")
 
 
-  def taxa_protein_dict(self,f,typ):
+  def dict_from_fasta(self,f,typ):
     #returns list of all taxa from fasta files
     t_p_dict = {}
-    species = [itm.replace("[","").replace("]","") for itm in re.findall(r"\[.*\]",f)]
+    species = [itm.replace("[","").replace("]","") for itm in re.findall(r"\[{1}[A-Z]{1}[a-z]+ [a-z]*\]{1}",f)]
     def build_dict(itr):
       for i in range(len(species)):
         try:
@@ -77,9 +80,25 @@ class Retrieve():
       accessions = [itm for itm in re.findall(r"[A-Z]+_?\d+\.\d",f)]
       proteins = re.split(r">.{0,150}]",f.replace("\n",""))
       proteins = list(filter(None,proteins))
+      assert(len(accessions) == len(proteins))
       for i in range(len(species)):
         try:
           t_p_dict[species[i]] = {**t_p_dict[species[i]],accessions[i]:proteins[i]}
         except:
           t_p_dict = {**t_p_dict, species[i]:{accessions[i]:[proteins[i]]}}
+    return t_p_dict
+
+
+  def dict_from_gb(self,gb):
+    t_p_dict = {}
+    orgs = re.findall(r'ORGANISM.*',gb)
+    orgs = [org.replace("ORGANISM","").strip() for org in orgs]
+    accs = re.findall(r'VERSION.*',gb)
+    accs = [acc.replace("VERSION","").strip() for acc in accs]
+    assert(len(orgs) == len(accs))
+    for i in range(len(orgs)):
+      try:
+        t_p_dict[orgs[i]] += [accs[i]]
+      except:
+        t_p_dict[orgs[i]] = [accs[i]]
     return t_p_dict

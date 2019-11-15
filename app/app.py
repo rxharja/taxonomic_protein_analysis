@@ -8,6 +8,7 @@ from app.retrieve import Retrieve
 from app.tools import Tools
 from app.spinner import Spinner
 from app.ld_json import Ld_json
+import re,os
 
 class App:
   #Initializer / instance attributes
@@ -19,10 +20,11 @@ class App:
     self.tools = Tools()
     self.dataset = None
     self.fasta = None
+    self.gb = None
     self.summary = None
     self.fasta_file = None
     self.motifs = None
-  
+ 
 
   @classmethod
   def from_class(cls):
@@ -41,7 +43,7 @@ class App:
       self.Taxonomy = User_input.from_param(inp,"taxonomy")
     else:
       self.Taxonomy = User_input.from_input("taxonomy")
- 
+
 
   @property
   def protein_query(self):
@@ -51,7 +53,7 @@ class App:
   @protein_query.setter
   def protein_query(self,inp):
     self.Protein = User_input.from_input("protein")
-  
+ 
   
   def total_species(self):
     return len(self.dataset.keys())
@@ -97,24 +99,34 @@ class App:
       print(self.out['missing_fasta'])
 
 
-  def build_dataset(self,typ="all"):
+  def build_dataset(self):
   #  gets list of all taxa produced from search
-    if self.fasta_file == None:
-      self.dataset = self.ncbi_api.taxa_protein_dict(self.get_fasta(),typ)
-    else:  self.dataset = self.ncbi_api.taxa_protein_dict(self.fasta,typ)
+    if not self.gb: self.dataset = self.ncbi_api.dict_from_gb(self.get_gb())
+    else: self.dataset = self.ncbi_api.dict_from_gb(self.gb)
     return self.dataset  
 
+
+  def update_dataset(self):
+    new_data = open('to_pop','r').read()
+    to_pop = re.findall(r"[A-Z]+_?\d+\.\d",new_data)
+    for org in self.dataset.keys():
+      self.dataset[org] = [x for x in self.dataset[org] if x not in to_pop]
+    os.remove('to_pop') 
 
   def get_summary(self):
     self.summary = self.ncbi_api.summary(self.protein_query,self.taxon_query)
     return self.summary
 
 
-  #TODO refactor to be property
   def get_fasta(self):
     #initiates ncbi search using esearch and efetch
     self.fasta,self.fasta_file = self.ncbi_api.retrieve(self.protein_query,self.taxon_query)  
     return self.fasta
+
+
+  def get_gb(self):
+    self.gb = self.ncbi_api.retrieve(self.protein_query,self.taxon_query,form="gb")
+    return self.gb
 
 
   def process_redundant(self,dataset=None):
@@ -125,4 +137,8 @@ class App:
     with Spinner("Yeeting redundant data "):
       self.fasta,self.fasta_file = self.tools.filter_redundant(self.fasta_file,self.dataset,"{}_{}"\
                                   .format(self.taxon_query,self.protein_query)) 
-      self.build_dataset() 
+    self.update_dataset()
+
+
+  def tree(self):
+    print("in app.tree")
