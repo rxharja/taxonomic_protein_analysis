@@ -17,9 +17,12 @@ class Tools:
     self.blast_file = None
     self.top_250 = None
     self.list_of_acc = None
+    self.plot_file = None
     self.motifs_file = None
+    self.tree_file = None
     self.path = path
     self.splitter = Splitter()
+    self.bb = 1000
 
 
   @staticmethod  
@@ -98,8 +101,7 @@ class Tools:
       b_file = self.path + b_file.replace(" ","_")
       self.run("makeblastdb -in {} -dbtype prot -out {}".format(self.fasta,db_file))
       self.db = db_file
-      self.run("blastp -db {} -query {} -max_hsps 1 -outfmt 6 > {}"\
-      .format(self.db,self.consensus,b_file))
+      self.run("blastp -db {} -query {} -max_hsps 1 -outfmt 6 > {}".format(self.db,self.consensus,b_file))
       self.blast_file = b_file
     else:
       self.throw_err(self.out['blast_err'])
@@ -112,9 +114,9 @@ class Tools:
       else:
         self.throw_err(self.out['plot_err'])
     title = title.replace(" ","_")
-    self.run("plotcon {} -winsize {} -graph {} -gdirectory {} -goutfile {} -auto Y"\
-    .format(algn_file,winsize,graph,self.path,title))
+    self.run("plotcon {} -winsize {} -graph {} -gdirectory {} -goutfile {} -auto Y".format(algn_file,winsize,graph,self.path,title))
     self.run("(display './outputs/{}.{}' &)".format(title,graph))  
+    self.plot_file =self.path+ title + '.svg'
 
 
   def motifs(self,title,acc="",align=""): 
@@ -140,8 +142,7 @@ class Tools:
           if counter >= max_seq: break
           counter += 1
           out.write(line.split()[1]+"\n")
-    self.run("/localdisk/data/BPSM/Assignment2/pullseq -i {} -n {} > {}"\
-      .format(self.alignment_file,outf,filtered))
+    self.run("/localdisk/data/BPSM/Assignment2/pullseq -i {} -n {} > {}".format(self.alignment_file,outf,filtered))
     self.alignment_file,self.list_of_acc = filtered,outf
 
 
@@ -149,3 +150,8 @@ class Tools:
     raw_fasta,self.fasta = self.splitter.process_redundant(fasta,data,self.path+title.replace(" ","_")+"_no_redundant.fasta")
     return raw_fasta,self.fasta
 
+
+  def tree(self):
+    subprocess.call('iqtree -s {} -bb {} -quiet'.format(self.alignment_file,self.bb),shell=True)
+    self.tree_file = self.alignment_file+'.iqtree'
+    print(open(self.tree_file,'r').read())

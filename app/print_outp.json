@@ -1,7 +1,13 @@
 {"app":
   {
    "missing_fasta":"Missing fasta file! Please run get_fasta first.",
-   "missing_dataset":"Processing redundant sequences requires a dictionary structure such as {'species':{'accession':some_value}}. One is generated when the build_dataset() method is called."
+   "missing_dataset":"Processing redundant sequences requires a dictionary structure such as {'species':{'accession':some_value}}. One is generated when the build_dataset() method is called.",
+   "locations":"Your file locations are here:",
+   "graph":"Graph: {}",
+   "motifs":"Motifs: {}",
+   "tree":"Tree: {}",
+   "alignment":"Alignment: {}",
+   "fasta":"FASTA: {}"
   },
  "user_input":
   {"param_error":"invalid param value, only taxonomy or protein allowed",
@@ -19,11 +25,12 @@
    "vague_taxons":"Taxon query too vague. Narrow down by selecting a number, or enter 0 to choose another taxon or protein:",
    "improper_choice":"Make sure your choice is a valid number between 1 and {}, or 0 to exit.",
    "no_results":"Sorry, your search produced {} results. That's not enough to continue. Please change a criteria to continue",
-   "results":"your search produced {} results. Enter to proceed: ",
+   "results":"your search produced {} hits. Enter to process: ",
+   "results_redundancy":"After filtering for redundancy, your new dataset has {} proteins among {} species. Enter to continue: ",
    "display":"Your inputs were:\n\t1. Taxon: {}\n\t2. Protein: {}\n",
    "forward":"Would you like to proceed with {}?",
-   "continue_results":"Your search produced {} sequences between {} species. Enter to continue: ",
-   "welcome":"\nWelcome to Taxonomic Protein Analysis.py!\nType exit,quit, or q at any time to quit the program.\n\n1.[{}] Determine/Plot Protein Conservation\n2.[{}] Scan sequences for motifs\n3.[{}] *Wildcard.\n\nEverything marked with X will be run, if you want to change that, type 1,2,3 to select/unselect a choice.\nIf nothing is selected, the program will download your query fasta file and produce a protein alignment in the outputs folder.\n If you're happy with your choices, just hit enter to move on!"
+   "continue_results":"Your data shows that there are {} sequences between {} species. Enter to continue: ",
+   "welcome":"\nWelcome to Taxonomic Protein Analysis.py!\nType exit,quit, or q at any time to quit the program.\n\n1.[{}] Skip Redundant Sequences\n2.[{}] Determine/Plot Protein Conservation\n3.[{}] Scan Sequences for Motifs\n4.[{}] Phylogenetic Tree\n\nEverything marked with X will be run.\ntype 1,2,3 to select/unselect a choice.\n4 will select all choices and 5 will deselect all choices.\nIf nothing is selected, the program will download your query fasta file and produce a protein alignment in the outputs folder.\n If you're happy with your choices, just hit enter to move on!"
   },
  "tools":
   {

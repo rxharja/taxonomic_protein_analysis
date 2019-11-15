@@ -14,8 +14,8 @@ class Retrieve():
       #TODO: figure out order of numbers and txid
       taxon = taxon + args[0]  
     if len(argv) < 3:
-      return  "esearch -db {} -query '{}'".format(argv[1],taxon)
-    return "esearch -db {} -query '{}[Organism:exp] AND {} NOT PARTIAL'"\
+      return  "esearch -db {} -retmax '10000' -query '{}'".format(argv[1],taxon)
+    return "esearch -db {} -retmax 10000 -query '{}[Organism:exp] AND {} NOT PARTIAL'"\
       .format(argv[1],taxon,argv[2])
 
   @staticmethod

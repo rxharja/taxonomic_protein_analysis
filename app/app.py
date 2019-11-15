@@ -70,13 +70,9 @@ class App:
 
   def align(self,max_acc=250):
     self.write()
-    with Spinner("Aligning sequences "): self.tools.align(self.fasta_file,\
-                title="{}_{}_alignment.fasta".format(self.taxon_query,self.protein_query)) 
-    with Spinner("Building consensus sequence "): self.tools.cons(title="{}_{}_cons.fasta"\
-                 .format(self.taxon_query,self.protein_query))
-    with Spinner("Running BLASTP "): self.tools.blast(db_file="{}_{}_db"\
-                 .format(self.taxon_query,self.protein_query),b_file="{}_{}_blast.out"\
-                 .format(self.taxon_query,self.protein_query))
+    with Spinner("Aligning sequences "): self.tools.align(self.fasta_file,title="{}_{}_alignment.fasta".format(self.taxon_query,self.protein_query)) 
+    with Spinner("Building consensus sequence "): self.tools.cons(title="{}_{}_cons.fasta".format(self.taxon_query,self.protein_query))
+    with Spinner("Running BLASTP "): self.tools.blast(db_file="{}_{}_db".format(self.taxon_query,self.protein_query),b_file="{}_{}_blast.out".format(self.taxon_query,self.protein_query))
     self.tools.filter(max_acc,title="{}_{}".format(self.taxon_query,self.protein_query))
 
 
@@ -135,10 +131,18 @@ class App:
     elif not dataset:
       print(self.out['missing_dataset'])
     with Spinner("Yeeting redundant data "):
-      self.fasta,self.fasta_file = self.tools.filter_redundant(self.fasta_file,self.dataset,"{}_{}"\
-                                  .format(self.taxon_query,self.protein_query)) 
+      self.fasta,self.fasta_file = self.tools.filter_redundant(self.fasta_file,self.dataset,"{}_{}".format(self.taxon_query,self.protein_query)) 
     self.update_dataset()
 
 
   def tree(self):
-    print("in app.tree")
+    with Spinner('Building tree, this may take a while '): self.tools.tree()
+
+  
+  def file_locs(self):
+    print(self.out["locations"])
+    if self.fasta_file: print(self.out['fasta'].format(self.fasta_file))
+    if self.tools.alignment_file: print(self.out["alignment"].format(self.tools.alignment_file))
+    if self.tools.plot_file: print(self.out['graph'].format(self.tools.plot_file))
+    if self.tools.motifs_file: print(self.out['motifs'].format(self.tools.motifs_file))
+    if self.tools.tree_file: print(self.out['tree'].format(self.tools.tree_file))

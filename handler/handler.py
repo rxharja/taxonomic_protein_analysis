@@ -11,7 +11,7 @@ class Handler:
   def __init__(self,pth):
     self.taxon_cache = {}
     self.path_list = pth
-
+    self.displayed_results = False
 
   #handle user input logic: If user is happy with their taxon and protein
   #options, then move on to taxon handler. Taxon handler will check the 
@@ -104,7 +104,10 @@ class Handler:
 
 
   def count_results(self,seq,spec):
-    inp = self.ex_check(input(self.out['continue_results'].format(seq,spec)))
+    outp = self.out['continue_results'].format(seq,spec)
+    if self.displayed_results: outp = self.out['results_redundancy'].format(seq,spec)
+    inp = self.ex_check(input(outp))
+    self.displayed_results = True
     if inp=="": return True
     else: 
       print("Returning")
@@ -136,15 +139,15 @@ class Handler:
   @classmethod
   def welcome(cls):
     #TODO rename wildcard
-    path_list = [True,True,True]
+    path_list = [True,True,True,True]
     while True:    
       path_vals = ['X' if itm  else ' ' for itm in path_list]
-      print(cls.out['welcome'].format(path_vals[0],path_vals[1],path_vals[2]))
+      print(cls.out['welcome'].format(path_vals[0],path_vals[1],path_vals[2],path_vals[3]))
       inp = input("Value: ")
       if inp == "" or inp in ['quit','exit','q']: break
       try:
-        if int(inp)==4: path_list = [True,True,True]
-        elif int(inp)==5: path_list = [False,False,False]
+        if int(inp)==4: path_list = [True for itm in path_list]
+        elif int(inp)==5: path_list = [False for itm in path_list]
         else: path_list[int(inp)-1] = not path_list[int(inp)-1] 
       except:
         print("Your input must be a valid integer")
