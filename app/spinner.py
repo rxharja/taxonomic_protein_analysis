@@ -1,16 +1,18 @@
 #!/usr/bin/env
 import subprocess,sys,time,threading
 
+#Just a fun UI element to show that a process is running. Gives visual feedback to user in form of a spinning wheel
 class Spinner:
     busy = False
     delay = 0.1
 
+    #this makes the animation
     @staticmethod
     def spinning_cursor():
         while 1: 
             for cursor in '|/-\\': yield cursor
 
-
+   
     def __init__(self, out, delay=None):
 	#set description of task to out
         self.out = out
