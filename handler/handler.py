@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from app.spinner import Spinner
 from app.ld_json import Ld_json
+import operator
 
 #This class handles the flow of our program based on user input and whatever output the program returns.
 class Handler:
@@ -102,10 +103,13 @@ class Handler:
       return False
 
   #here we display more detailed results once we've downloaded the gb, made our dictionary, and downloaded the fasta. We show the user how many sequences and species the result has produced. We also define a case for if we've run the redundancy, which means we show the same detailed results again, but we need a different message to give to the user to show them that the result is different because we ran the redundancy.
-  def count_results(self,seq,spec):
+  def count_results(self,seq,spec,obj):
     outp = self.out['continue_results'].format(seq,spec)
     #we init this variable as false so the first time it runs its false, but after that, we set it to true so the next time it runs it shows the user results for the redundancy.
     if self.displayed_results: outp = self.out['results_redundancy'].format(seq,spec)
+    sorted_dict = sorted(obj.dataset, key= lambda k: len(obj.dataset[k]),reverse=True)
+    print("Your top 5 species in terms of protein sequence hits:")
+    [print("{}:\t".format(i+1),sorted_dict[i],"\thits:\t",len(obj.dataset[sorted_dict[i]])) for i in range(len(sorted_dict)) if i < 5]
     inp = self.ex_check(input(outp))
     self.displayed_results = True
     if inp=="": return True
@@ -151,7 +155,7 @@ class Handler:
         if int(val) == 4: obj.tools.set_bb()
       except: print("invalid choice :(")
 
-
+  
   #welcome function that displays when handler class is first initialized. It allows the user to decide between whatever they'd like to to run and store it as a true or false in a list of booleans, then visually display that feedback back to the user. 
   @classmethod
   def welcome(cls,obj):
