@@ -43,7 +43,7 @@ class User_input:
   def check_input(out,param,inp):
     #exit conditions
     exits = ['exit','q','quit']
-    if inp in exits: exit()i
+    if inp in exits: exit()
     #handle empty inputs as not acceptable
     if inp.strip() == "":
       print(out['no_input'])  

@@ -38,7 +38,7 @@ class App:
   #returns our taxon query
   @property
   def taxon_query(self):
-    return self.Taxonomy.val
+    return self.Taxonomy.user_input
 
   #this gets called in the advanced menu and controls what a user can input for the max number of accessions to process
   def set_max_acc(self):
@@ -60,7 +60,7 @@ class App:
   #getter for protein_query
   @property
   def protein_query(self):
-    return self.Protein.val
+    return self.Protein.user_input
 
   #setter for protein query, for some reason I didn't give the same branching for taxon setting, probably because setting the taxon is more restricted and sophisticated than setting the protein.
   @protein_query.setter

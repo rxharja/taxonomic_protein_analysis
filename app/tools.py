@@ -1,4 +1,4 @@
-#!/usr/bin/env python4
+#!/usr/bin/env python3
 import subprocess,os
 from app.ld_json import Ld_json
 from app.splitter import Splitter
@@ -49,16 +49,8 @@ class Tools:
     #Just made it easier to run suprocess.call to shell
     return subprocess.call(inp,shell=True)
 
-  #changes babyboostrap value for iqtree which can only be accessed in the advanced menu, it follows the same structure of the other advanced menu tweaks
-  def set_bb(self,new_val):
-    try:
-      if new_val>=1000:self.bb = new_val
-      else: print("Make sure your bootstrap value is an integer of value 1000 or above")
-    except:
-      print("bootstrap value must be an integer")
-
-
-  #this takes our dataset, takes the accessions, and writes them all into a file called taxon_protein_accs.fasta 
+ 
+   #this takes our dataset, takes the accessions, and writes them all into a file called taxon_protein_accs.fasta 
   def write(self,inp_f,p="protein",t="taxon",alt=""):
     p = p.replace(" ","_")
     t = t.replace(" ","_")

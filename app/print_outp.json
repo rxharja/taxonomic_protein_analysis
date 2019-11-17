@@ -30,9 +30,9 @@
    "display":"Your inputs were:\n\t1. Taxon: {}\n\t2. Protein: {}\n",
    "forward":"Would you like to proceed with {}?",
    "continue_results":"Your data shows that there are {} sequences between {} species. Enter to continue: ",
-   "welcome":"\nWelcome to Taxonomic Protein Analysis.py!\nType exit,quit, or q at any time to quit the program.\n\n1.[{}] Skip Redundant Sequences\n2.[{}] Determine/Plot Protein Conservation\n3.[{}] Scan Sequences for Motifs\n4.[{}] Phylogenetic Tree\n\nEverything marked with X will be run.\ntype numbers 1 through 4 to select/unselect a choice.\n5 will select all choices and 6 will deselect all choices.\nIf nothing is selected, the program will download your query fasta file and produce a protein alignment in the outputs folder.\n If you're happy with your choices, just hit enter to move on!",
+   "welcome":"\nWelcome to Taxonomic Protein Analysis.py!\nType exit,quit, or q at any time to quit the program.\n\n1.[{}] Skip Redundant Sequences\n2.[{}] Determine/Plot Protein Conservation\n3.[{}] Scan Sequences for Motifs\n4.[{}] Phylogenetic Tree\n\nEverything marked with X will be run.\ntype numbers 1 through 4 to select/unselect a choice.\n5 will select all choices and 6 will deselect all choices.\nIf nothing is selected, the program will download your query fasta file, generate a sorted list of your most similar sequences, and produce a protein alignment in the outputs folder.\nIf you would like to tweak some more intricate features, type 'advanced' to access the advanced settings.\n If you're happy with your choices, just hit enter to move on!",
    "advanced_menu":"Advanced Menu:\n1.Maximum Accessions to Download (2-10000): {}\n2.Maximum Accessions to Process (0-250): {}\n3.Redundancy Match Threshold (0-100): {}\n4.Phylogenetic Tree Boostrap value (min: 1000): {}",
-   "advanced_inp":"Make a selection between 1 and 4. Or, type exit to leave the advanced menu.",
+   "advanced_inp":"Make a selection between 1 and 4. Or, type exit to leave the advanced menu: ",
    "out_of_bound_inp":"Selection must be a number between 1 and 4"
   },
  "tools":
