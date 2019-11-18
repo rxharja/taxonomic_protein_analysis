@@ -68,5 +68,5 @@ class User_input:
       if re.match("^[a-z]+[a-z0-9-_]*[a-z0-9]$",inp):
         return False
       else:
-        print(out['protein'])
+       # print(out['protein'])
         return False

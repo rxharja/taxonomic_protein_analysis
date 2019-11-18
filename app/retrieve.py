@@ -25,7 +25,7 @@ class Retrieve():
   #returns the efetch string which gets combined with esearch, can pass in format and db 
   @staticmethod
   def fetch_str(db,form):
-    return  " | efetch -db {} -format {} ".format(db,form)
+    return  " | efetch -db {} -format {}".format(db,form)
   
   #summary string used to get accession counts to display summary to user, can request other formats, not actually used in this script but another dev might find it useful
   @staticmethod
@@ -111,10 +111,15 @@ class Retrieve():
     orgs = [org.replace("ORGANISM","").strip() for org in orgs]
     accs = re.findall(r'VERSION.*',gb)
     accs = [acc.replace("VERSION","").strip() for acc in accs]
+    #can't get esearch -retmax to work, this will have to do for now
+    if len(orgs) > self.retmax:print("Your search produced over {} results, only the first {}  will be processed.".format(self.retmax,self.retmax))
+    counter = 0
     assert(len(orgs) == len(accs))
     for i in range(len(orgs)):
+      if counter > self.retmax: break
       try:
         t_p_dict[orgs[i]] += [accs[i]]
       except:
         t_p_dict[orgs[i]] = [accs[i]]
+      counter+=1
     return t_p_dict
