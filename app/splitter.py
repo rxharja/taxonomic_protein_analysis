@@ -66,8 +66,8 @@ class Splitter:
 
   #used in the advanced menu to set the threshold for skipredundancy. Same handling in all other cases of advanced menu assigning
   def set_threshold(self):
-    val = input("3. Redundancy Match Threshold(0-100): ")
+    val = input("3. Redundancy Match Threshold(50-100): ")
     try:
-      if int(val) >= 0 and int(val) <= 100: self.threshold_val = int(val)
-      else: print("Your value must be between 0 and 100")
+      if int(val) >= 50 and int(val) <= 100: self.threshold_val = int(val)
+      else: print("Your value must be between 50 and 100")
     except: print("Your value must be an integer")

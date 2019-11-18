@@ -111,7 +111,8 @@ class Tools:
     self.plot_file =self.path+ title + '.svg' #save pathway of plot to state
 
   #abstracts the splitter.process_motifs method chooses the right files to pass into it, then returns the data from the motifs to app class
-  def motifs(self,title,acc="",align=""): 
+  def motifs(self,title,acc="",align=""):
+    title = title.replace(" ","_") 
     if self.check_file(self.list_of_acc, self.alignment_file):
       acc = self.list_of_acc
       align = self.alignment_file
@@ -152,6 +153,6 @@ class Tools:
   
   #calls iq tree and prints it to the screen. Also saves file name to state
   def tree(self):
-    subprocess.call('iqtree -s {} -bb {} -quiet'.format(self.alignment_file,self.bb),shell=True)
+    subprocess.call('iqtree -s {} -m MFP -nt AUTO -alrt {} -bb {} -bnni'.format(self.alignment_file,self.bb,self.bb),shell=True)
     self.tree_file = self.alignment_file+'.iqtree'
     print(open(self.tree_file,'r').read())

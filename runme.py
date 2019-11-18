@@ -15,13 +15,13 @@ def handle(obj,handler):
     obj.build_dataset()
     obj.get_fasta()
   #The results of the number of accessions and total species as well as the top 5 species in terms of accession count are displayed to the user so they can make choice of whether they'd like to continue or not.
-  if not handler.count_results(obj.total_seqs(),obj.total_species()): return handle(obj,handler)
+  if not handler.count_results(obj.total_seqs(),obj.total_species(),obj): return handle(obj,handler)
   #If the user chose to remove redundant sequences, this is run here. 
   if handler.path_list[0]:
     #This splits the fasta file into sequences per species, and runs skip redundant on each file so only redundant sequences within species are removed.
     obj.process_redundant()
     #The dataset is updated and displayed to the user. They are asked once again if they wish to proceed with their new data, if not, they are taken back to the input screen.
-    if not handler.count_results(obj.total_seqs(),obj.total_species()): return handle(obj,handler)
+    if not handler.count_results(obj.total_seqs(),obj.total_species(),obj): return handle(obj,handler)
   #the clustalo alignment is run on the dataset and an alignment file is returned. That alignment file is then used to build a consensus sequence. A blast database is built from the dataset, and the consensus sequence is matched against that dataset to produce a list of the top 250(or user defined) most identical accessions. The program always outputs this if everything in Handler.welcome() isnt checked
   obj.align()
   #if the user chose to run the plot, the plot is built from the top 250 accessions of the dataset using plotcon, displayed to the screen, and saved as an svg

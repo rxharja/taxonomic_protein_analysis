@@ -45,8 +45,8 @@ class App:
     #if the value is within 0 to 250, accept it and reassign max_acc, otherwise don't do anything and tell the user the appropriate thing to enter
     val = input("1. Maximum Accessions to Download(0-250): ")
     try: 
-      if int(val) <= 250 and int(val) >= 0: self.max_acc = int(val)
-      else: print("Your value must be a number between 0 and 250")
+      if int(val) <= 250 and int(val) >= 2: self.max_acc = int(val)
+      else: print("Your value must be a number between 2 and 250")
     except: print("Your value must be an integer")
 
   #if this function is called with taxonomy as a param, it will give the user a message to enter a taxon, otherwise itll just do a direct assignment of whatever the input you passed was, which is not equal to taxonomy
